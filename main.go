@@ -2,21 +2,27 @@ package main
 
 import (
 	"container/list"
+	"encoding/json"
+	"fmt"
 
 	"github.com/gofrs/uuid"
 )
 
 // Event type
 type Event struct {
-	uuid        uuid.UUID
+	UUID  string `json:"uuid"`
+	Event string `json:"event"`
+
 	connections list.List
 }
 
 func uuidTest() {
 	event := Event{}
-	event.uuid, _ = uuid.NewV4()
 
-	println(event.uuid.String())
+	uuid, _ := uuid.NewV4()
+	event.UUID = uuid.String()
+
+	println(event.UUID)
 }
 
 func listTest() {
@@ -38,7 +44,27 @@ func listTest() {
 	}
 }
 
+func jsonTest() {
+	jsonText := `[
+		{
+			"uuid": "uuid1",
+			"event": "SAY"
+		},
+		{
+			"uuid": "uuid2",
+			"event": "MOVE"
+		}
+	]`
+
+	var events []Event
+
+	json.Unmarshal([]byte(jsonText), &events)
+
+	fmt.Println(events)
+}
+
 func main() {
 	uuidTest()
 	listTest()
+	jsonTest()
 }
